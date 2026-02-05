@@ -83,3 +83,55 @@ export const pingServer = async (): Promise<boolean> => {
 };
 
 //#endregion
+
+//#region Data models
+export interface Artist {
+  id: string;
+  name: string;
+  coverArt: string;
+  albums: Album[];
+  singles: Song[];
+}
+
+export interface Album {
+  id: string;
+  title: string;
+  artist: Artist;
+  coverArt: string;
+  songs: Song[];
+}
+
+export interface Song {
+  id: string;
+  title: string;
+  artist: Artist;
+  album: Album;
+  coverArt: string;
+  duration: number;
+  starred: boolean;
+}
+
+export const fetchArtists = async (): Promise<Artist[]> => {
+  const params = await getAuthParams();
+  if (!params) throw new Error("Authentication parameters not found");
+
+  const response = await fetch(buildUrl("getArtists.view", params));
+  const data = await response.json();
+  const indexedArtists = data?.["subsonic-response"]?.artists?.index || [];
+
+  const artistList: Artist[] = indexedArtists.flatMap((index: any) =>
+    index.artist.map((artistData: any) => ({
+      id: artistData.id,
+      name: artistData.name,
+      coverArt: buildUrl("getCoverArt.view", params, {
+        id: artistData.coverArt,
+        size: "300",
+      }),
+      albums: [],
+      singles: [],
+    })),
+  );
+  return artistList;
+};
+
+//#endregion
