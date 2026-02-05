@@ -3,5 +3,8 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    { "file": ".copilot-commit-message-instructions.md" }
+  ]
 }
