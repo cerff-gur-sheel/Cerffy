@@ -6,5 +6,6 @@
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     { "file": ".copilot-commit-message-instructions.md" }
-  ]
+  ],
+  "cSpell.words": ["Cerffy"]
 }
