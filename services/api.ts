@@ -48,25 +48,32 @@ export const buildUrl = (
   params: URLSearchParams,
   extra: Record<string, string> = {},
 ): string => {
-  const url = new URL(`${SERVER_URL}/${endpoint}`);
+  const url = new URL(`${SERVER_URL}/rest/${endpoint}`);
   params.forEach((value, key) => url.searchParams.append(key, value));
   Object.entries(extra).forEach(([key, value]) =>
     url.searchParams.append(key, value),
   );
   return url.toString();
 };
-
 /**
- * ping the server to check if it's reachable and authentication parameters are valid
- * @throws Error if authentication parameters are missing or if the network response is not ok
- * @returns true if the server responds successfully, otherwise throws an error
+ * Ping the server to check if it's reachable and authentication parameters are valid.
+ * @throws Error if authentication parameters are missing or if the network response is not ok.
+ * @returns true if the server responds successfully, otherwise throws an error.
  */
 export const pingServer = async (): Promise<boolean> => {
   const params = await getAuthParams();
   if (!params) throw new Error("Authentication parameters not found");
 
-  const response = await fetch(buildUrl("ping.view", params));
-  if (!response.ok) throw new Error("Network response was not ok");
+  const url = buildUrl("ping.view", params);
+  const response = await fetch(url);
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(`Network response was not ok: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (data?.["subsonic-response"]?.status === "ok") {
+    return true;
+  }
+  throw new Error("Server responded with an error", { cause: data });
 };

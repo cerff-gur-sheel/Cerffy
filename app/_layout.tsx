@@ -12,6 +12,8 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
+import { pingServer, saveCredentials } from "@/services/api";
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary
@@ -41,6 +43,16 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // Move this useEffect BEFORE the conditional return
+  useEffect(() => {
+    saveCredentials("testador", "teste");
+    pingServer()
+      .then(() =>
+        console.log("Server is reachable and authentication is valid"),
+      )
+      .catch((err) => console.error("Error pinging server:", err));
+  }, []);
 
   if (!loaded) {
     return null;
