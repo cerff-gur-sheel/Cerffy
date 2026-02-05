@@ -88,7 +88,7 @@ export const pingServer = async (): Promise<boolean> => {
 export interface Artist {
   id: string;
   name: string;
-  coverArt: string;
+  cover: string;
   albums: Album[];
   singles: Song[];
 }
@@ -97,7 +97,7 @@ export interface Album {
   id: string;
   title: string;
   artist: Artist;
-  coverArt: string;
+  cover: string;
   songs: Song[];
 }
 
@@ -106,7 +106,7 @@ export interface Song {
   title: string;
   artist: Artist;
   album: Album;
-  coverArt: string;
+  cover: string;
   duration: number;
   starred: boolean;
 }
@@ -123,7 +123,7 @@ export const fetchArtists = async (): Promise<Artist[]> => {
     index.artist.map((artistData: any) => ({
       id: artistData.id,
       name: artistData.name,
-      coverArt: buildUrl("getCoverArt.view", params, {
+      cover: buildUrl("getCoverArt.view", params, {
         id: artistData.coverArt,
         size: "300",
       }),

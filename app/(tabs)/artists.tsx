@@ -1,15 +1,17 @@
 import { Text, View } from "@/components/Themed";
 import { fetchArtists } from "@/services/api";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { Dimensions, FlatList, Image, Pressable } from "react-native";
+
+const COLUMNS = 2;
 
 export default function Artists() {
-  const [artists, setArtists] = useState<string[]>([]);
+  const [artists, setArtists] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const dat = await fetchArtists();
-      setArtists(dat.map((artist) => artist.name));
+      setArtists(dat);
     };
     fetchData();
   }, []);
@@ -19,14 +21,28 @@ export default function Artists() {
       <Text>Artists</Text>
       <FlatList
         data={artists}
-        keyExtractor={(_item, index) => index.toString()}
-        numColumns={1}
+        keyExtractor={(_item, index) => _item.id || index.toString()}
+        numColumns={COLUMNS}
         renderItem={({ item }) => (
-          <View>
-            <Text>{item}</Text>
-          </View>
+          <Pressable onPress={() => {}}>
+            <Text>{item.name}</Text>
+            <Image
+              source={{ uri: item.cover, cache: "force-cache" }}
+              resizeMode="cover"
+              style={styles.thumbnail}
+            />
+          </Pressable>
         )}
       />
     </View>
   );
 }
+
+const { width } = Dimensions.get("window");
+
+const styles = {
+  thumbnail: {
+    width: width / COLUMNS - 20,
+    height: width / COLUMNS - 20,
+  },
+};
