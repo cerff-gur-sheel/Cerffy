@@ -1,5 +1,28 @@
 import { CryptoDigestAlgorithm, digestStringAsync } from "expo-crypto";
 import { getItemAsync, setItemAsync } from "expo-secure-store";
+
+/**
+ * build a complete URL for API requests
+ * @param endpoint - API endpoint to call
+ * @param params - URLSearchParams containing authentication and other parameters
+ * @param extra - additional query parameters to include in the URL
+ * @returns fully constructed URL as a string
+ */
+export const buildUrl = (
+  endpoint: string,
+  params: URLSearchParams,
+  extra: Record<string, string> = {},
+): string => {
+  const url = new URL(`${SERVER_URL}/rest/${endpoint}`);
+  params.forEach((value, key) => url.searchParams.append(key, value));
+  Object.entries(extra).forEach(([key, value]) =>
+    url.searchParams.append(key, value),
+  );
+  return url.toString();
+};
+
+//#region API connection and authentication
+
 const SERVER_URL = "https://music.cerffgursheel.party";
 const USER_CREDENTIALS_KEY = "user_credentials";
 
@@ -37,25 +60,6 @@ export const saveCredentials = async (user: string, pass: string) => {
 };
 
 /**
- * build a complete URL for API requests
- * @param endpoint - API endpoint to call
- * @param params - URLSearchParams containing authentication and other parameters
- * @param extra - additional query parameters to include in the URL
- * @returns fully constructed URL as a string
- */
-export const buildUrl = (
-  endpoint: string,
-  params: URLSearchParams,
-  extra: Record<string, string> = {},
-): string => {
-  const url = new URL(`${SERVER_URL}/rest/${endpoint}`);
-  params.forEach((value, key) => url.searchParams.append(key, value));
-  Object.entries(extra).forEach(([key, value]) =>
-    url.searchParams.append(key, value),
-  );
-  return url.toString();
-};
-/**
  * Ping the server to check if it's reachable and authentication parameters are valid.
  * @throws Error if authentication parameters are missing or if the network response is not ok.
  * @returns true if the server responds successfully, otherwise throws an error.
@@ -77,3 +81,5 @@ export const pingServer = async (): Promise<boolean> => {
   }
   throw new Error("Server responded with an error", { cause: data });
 };
+
+//#endregion
