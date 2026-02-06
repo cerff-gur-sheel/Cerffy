@@ -84,31 +84,14 @@ export const pingServer = async (): Promise<boolean> => {
 
 //#endregion
 
-//#region Data models
+//#region Artist Details Fetching
 export interface Artist {
   id: string;
   name: string;
   cover: string;
   albums: Album[];
   singles: Song[];
-}
-
-export interface Album {
-  id: string;
-  title: string;
-  artist: Artist;
-  cover: string;
-  songs: Song[];
-}
-
-export interface Song {
-  id: string;
-  title: string;
-  artist: Artist;
-  album: Album;
-  cover: string;
-  duration: number;
-  starred: boolean;
+  biography?: string;
 }
 
 export const fetchArtists = async (): Promise<Artist[]> => {
@@ -134,4 +117,104 @@ export const fetchArtists = async (): Promise<Artist[]> => {
   return artistList;
 };
 
+export const getArtistDetails = async (artistId: string): Promise<Artist> => {
+  const params = await getAuthParams();
+  if (!params) throw new Error("Authentication parameters not found");
+
+  const response = await fetch(
+    buildUrl("getArtist.view", params, { id: artistId }),
+  );
+  const data = await response.json();
+
+  const artistData = data["subsonic-response"]?.artist;
+
+  const albums =
+    artistData?.album
+      ?.filter((a: any) => a.albumType !== "Single" && a.albumType !== "EP")
+      .map((a: any) => ({
+        id: a.id,
+        title: a.name,
+        artist: {
+          id: artistData.id,
+          name: artistData.name,
+          cover: buildUrl("getCoverArt.view", params, {
+            id: artistData.coverArt,
+            size: "300",
+          }),
+          albums: [],
+          singles: [],
+        },
+        cover: buildUrl("getCoverArt.view", params, {
+          id: a.coverArt,
+          size: "300",
+        }),
+        songs: [],
+        songCount: a.songCount,
+      })) || [];
+
+  const singles =
+    artistData?.album
+      ?.filter((a: any) => a.albumType === "Single" || a.albumType === "EP")
+      .map((a: any) => ({
+        id: a.id,
+        title: a.name,
+        artist: {
+          id: artistData.id,
+          name: artistData.name,
+          cover: buildUrl("getCoverArt.view", params, {
+            id: artistData.coverArt,
+            size: "300",
+          }),
+          albums: [],
+          singles: [],
+        },
+        cover: buildUrl("getCoverArt.view", params, {
+          id: a.coverArt,
+          size: "300",
+        }),
+        songs: [],
+        songCount: a.songCount,
+      })) || [];
+
+  const artistInfoResponse = await fetch(
+    buildUrl("getArtistInfo.view", params, { id: artistId }),
+  );
+  const artistInfoData = await artistInfoResponse.json();
+
+  const bio =
+    artistInfoData["subsonic-response"]?.artistInfo?.biography ||
+    "No biography available.";
+
+  const artist: Artist = {
+    id: artistData.id,
+    name: artistData.name,
+    cover: buildUrl("getCoverArt.view", params, {
+      id: artistData.coverArt,
+      size: "300",
+    }),
+    albums,
+    singles,
+    biography: bio,
+  };
+  return artist;
+};
 //#endregion
+
+export interface Album {
+  id: string;
+  title: string;
+  artist: Artist;
+  cover: string;
+  songs: Song[];
+  songCount?: number;
+}
+
+export interface Song {
+  id: string;
+  title: string;
+  artist: Artist;
+  album: Album;
+  cover: string;
+  duration: number;
+  starred: boolean;
+}

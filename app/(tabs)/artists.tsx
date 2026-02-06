@@ -1,5 +1,6 @@
 import { Text, View } from "@/components/Themed";
 import { fetchArtists } from "@/services/api";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Dimensions, FlatList, Image, Pressable } from "react-native";
 
@@ -24,7 +25,11 @@ export default function Artists() {
         keyExtractor={(_item, index) => _item.id || index.toString()}
         numColumns={COLUMNS}
         renderItem={({ item }) => (
-          <Pressable onPress={() => {}}>
+          <Pressable
+            onPress={() => {
+              router.push({ pathname: `/artist`, params: { id: item.id } });
+            }}
+          >
             <Text>{item.name}</Text>
             <Image
               source={{ uri: item.cover, cache: "force-cache" }}
@@ -42,7 +47,7 @@ const { width } = Dimensions.get("window");
 
 const styles = {
   thumbnail: {
-    width: width / COLUMNS - 20,
-    height: width / COLUMNS - 20,
+    width: width / COLUMNS,
+    height: width / COLUMNS,
   },
 };
