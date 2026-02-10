@@ -1,23 +1,23 @@
 # Cerffy
 
-Cerffy é meu aplicativo pessoal de música, criado para integrar com meu servidor privado Navidrome. Depois de testar diversos apps feitos para servidores Subsonic/Navidrome e não me adaptar a nenhum, decidi desenvolver o meu próprio — totalmente alinhado com o que eu queria de experiência e interface.
+Cerffy is my personal music app, created to integrate with my private Navidrome server. After testing several apps made for Subsonic/Navidrome servers and not adapting to any of them, I decided to develop my own — fully aligned with the experience and interface I wanted.
 
-> **Obs:** Cerffy ainda está em desenvolvimento e não tem builds públicas prontas. O aplicativo também não está disponível em lojas. Só eu e alguns amigos próximos usamos, mas o código-fonte é aberto para quem quiser explorar, dar sugestões ou fazer fork.
+> **Note:** Cerffy is still under development and there are no public builds available. The app is also not published on any stores. Only I and a few close friends use it, but the source code is open for anyone who wants to explore, make suggestions, or fork.
 
-## Por que o Cerffy existe?
+## Why does Cerffy exist?
 
-- Não gostei das soluções prontas para Navidrome/Subsonic.
-- Quis aprender mais sobre mobile moderno com React Native/Expo.
-- Preferi construir uma interface intuitiva do meu jeito.
-- Integração direta com meu servidor de música (privado).
+- I didn't like the out-of-the-box solutions for Navidrome/Subsonic.
+- I wanted to learn more about modern mobile development with React Native/Expo.
+- I preferred to build a more intuitive interface in my own way.
+- Direct integration with my (private) music server.
 
-## Tecnologias
+## Technologies
 
 - **TypeScript**
-- **React Native** (com Expo Go)
-- Navegação por **Tabs**
-- Foco total na integração com Navidrome
+- **React Native** (with Expo Go)
+- **Tabs** navigation
+- Full focus on integration with Navidrome
 
 ---
 
-Se você quiser forkar, usar como base para o seu projeto, ou apenas dar uma olhada, sinta-se à vontade!
+If you want to fork, use as a base for your project, or just take a look, feel free!
