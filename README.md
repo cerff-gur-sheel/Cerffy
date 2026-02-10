@@ -1,4 +1,5 @@
 # Cerffy
+[![License: MIT](https://img.shields.io/github/license/cerff-gur-sheel/Cerffy?color=blue&style=flat-square)](https://github.com/cerff-gur-sheel/Cerffy/blob/main/LICENSE)
 
 Cerffy is my personal music app, created to integrate with my private Navidrome server. After testing several apps made for Subsonic/Navidrome servers and not adapting to any of them, I decided to develop my own — fully aligned with the experience and interface I wanted.
 
